@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGfy AI — The Future of Rental Living</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0A0E1A;
+    --paper: #F5F2EC;
+    --blue: #1846F1;
+    --blue-light: #EEF2FF;
+    --green: #00C48C;
+    --green-light: #E6FBF5;
+    --amber: #F59E0B;
+    --amber-light: #FFFBEB;
+    --red: #EF4444;
+    --muted: #6B7280;
+    --border: #E5E1D8;
+    --card: #FFFFFF;
+    --shadow: 0 2px 20px rgba(10,14,26,0.08);
+    --shadow-lg: 0 8px 48px rgba(10,14,26,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(24,70,241,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(24,70,241,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+
+  @keyframes gridDrift {
+    from { transform: translateY(0); }
+    to { transform: translateY(60px); }
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(24,70,241,0.25) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); }
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(24,70,241,0.2);
+    border: 1px solid rgba(24,70,241,0.4);
+    color: #7BA7FF;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    margin-bottom: 32px;
+    position: relative;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge span { width: 6px; height: 6px; background: #7BA7FF; border-radius: 50%; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    position: relative;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #4F8EF7, #00C48C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: rgba(255,255,255,0.55);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    position: relative;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    position: relative;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 15px;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #0f35d4; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(24,70,241,0.4); }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 15px;
+    border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+  .hero-stats {
+    position: relative;
+    display: flex; gap: 48px; flex-wrap: wrap; justify-content: center;
+    margin-top: 72px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #fff; }
+  .stat-num em { font-style: normal; background: linear-gradient(135deg, #4F8EF7, #00C48C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 4px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV PILLS ── */
+  .nav-pills {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,242,236,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: center;
+    gap: 4px; padding: 12px 24px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    background: transparent;
+  }
+  .pill:hover { background: var(--blue-light); color: var(--blue); border-color: #c7d6fd; }
+  .pill.active { background: var(--blue); color: #fff; }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+
+  .section-desc {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* ── PERSONA TABS ── */
+  .persona-tabs {
+    display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+
+  .ptab {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; border: 2px solid var(--border);
+    transition: all 0.25s; background: var(--card);
+    color: var(--muted);
+  }
+  .ptab.active-tenant { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .ptab.active-owner { border-color: var(--green); background: var(--green-light); color: #059669; }
+  .ptab.active-admin { border-color: var(--amber); background: var(--amber-light); color: #B45309; }
+
+  .persona-panel { display: none; }
+  .persona-panel.visible { display: block; animation: fadeIn 0.35s ease; }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── FEATURE CARDS ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--card-accent, var(--blue)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent; }
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-card.blue { --card-accent: var(--blue); }
+  .feature-card.green { --card-accent: var(--green); }
+  .feature-card.amber { --card-accent: var(--amber); }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .card-icon.blue { background: var(--blue-light); }
+  .card-icon.green { background: var(--green-light); }
+  .card-icon.amber { background: var(--amber-light); }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .card-tag.blue { background: var(--blue-light); color: var(--blue); }
+  .card-tag.green { background: var(--green-light); color: #059669; }
+  .card-tag.amber { background: var(--amber-light); color: #B45309; }
+
+  .card-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .card-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+
+  .card-impact {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--paper);
+  }
+  .card-impact .imp-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; }
+  .card-impact.blue .imp-val { color: var(--blue); }
+  .card-impact.green .imp-val { color: var(--green); }
+  .card-impact.amber .imp-val { color: var(--amber); }
+
+  /* ── DEMO / CHAT SECTION ── */
+  .demo-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media(max-width: 768px) { .demo-wrap { grid-template-columns: 1fr; } }
+
+  .demo-sidebar h3 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+  .demo-sidebar p { color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+
+  .demo-scenarios { display: flex; flex-direction: column; gap: 10px; }
+
+  .scenario-btn {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer; text-align: left;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--ink);
+  }
+  .scenario-btn:hover, .scenario-btn.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .scenario-btn span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .scenario-btn.active span { color: #7BA7FF; }
+
+  /* Chat UI */
+  .chat-window {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .chat-header {
+    background: var(--ink);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .chat-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .chat-header-text h4 { color: #fff; font-size: 14px; font-weight: 700; }
+  .chat-header-text p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+  .chat-status { width: 8px; height: 8px; background: var(--green); border-radius: 50%; margin-left: auto; animation: blink 1.5s infinite; }
+
+  .chat-messages {
+    height: 360px;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    scroll-behavior: smooth;
+  }
+
+  .msg { display: flex; gap: 10px; max-width: 85%; }
+  .msg.user { margin-left: auto; flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+  .msg-avatar.ai { background: linear-gradient(135deg, var(--blue), var(--green)); color: #fff; }
+  .msg-avatar.user { background: var(--paper); }
+
+  .msg-bubble {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px; line-height: 1.6;
+  }
+  .msg.ai .msg-bubble { background: var(--paper); border-radius: 4px 16px 16px 16px; }
+  .msg.user .msg-bubble { background: var(--blue); color: #fff; border-radius: 16px 4px 16px 16px; }
+
+  .msg-bubble strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .msg-bubble ul { padding-left: 16px; margin-top: 8px; }
+  .msg-bubble ul li { margin-bottom: 4px; }
+  .msg-bubble .chip {
+    display: inline-block; background: var(--blue-light); color: var(--blue);
+    padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600;
+    margin: 2px 2px 0 0;
+  }
+  .msg-bubble .chip.green { background: var(--green-light); color: #059669; }
+  .msg-bubble .chip.amber { background: var(--amber-light); color: #B45309; }
+
+  .chat-input-wrap {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px;
+  }
+
+  .chat-input {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--blue); }
+
+  .chat-send {
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer; font-size: 16px;
+    transition: background 0.2s;
+  }
+  .chat-send:hover { background: #0f35d4; }
+
+  .typing { display: flex; align-items: center; gap: 4px; padding: 12px 16px; }
+  .typing span { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; }
+
+  .timeline::before {
+    content: '';
+    position: absolute; left: 28px; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(to bottom, var(--blue), var(--green));
+  }
+
+  .tl-item {
+    display: flex; gap: 32px;
+    padding: 0 0 48px 0;
+    position: relative;
+  }
+
+  .tl-dot {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+    border: 3px solid var(--paper);
+  }
+  .tl-dot.phase1 { background: var(--blue-light); }
+  .tl-dot.phase2 { background: #EDE9FE; }
+  .tl-dot.phase3 { background: var(--green-light); }
+  .tl-dot.phase4 { background: var(--amber-light); }
+
+  .tl-content { flex: 1; padding-top: 12px; }
+  .tl-phase { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .tl-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+  .tl-desc { color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+
+  .tl-features {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .tl-feat {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+  .tl-feat.blue { background: var(--blue-light); color: var(--blue); border-color: #c7d6fd; }
+  .tl-feat.purple { background: #EDE9FE; color: #6D28D9; border-color: #DDD6FE; }
+  .tl-feat.green { background: var(--green-light); color: #059669; border-color: #A7F3D0; }
+  .tl-feat.amber { background: var(--amber-light); color: #B45309; border-color: #FDE68A; }
+
+  /* ── BUSINESS IMPACT ── */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .impact-card {
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .impact-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .impact-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px; font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .impact-num.blue { color: #7BA7FF; }
+  .impact-num.green { color: var(--green); }
+  .impact-num.amber { color: var(--amber); }
+  .impact-num.red { color: #FC8181; }
+
+  .impact-label { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.5; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .compare-table th {
+    padding: 16px 20px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    text-align: left;
+  }
+  .compare-table th:first-child { background: var(--paper); }
+  .compare-table th.col-now { background: #FEE2E2; color: var(--red); }
+  .compare-table th.col-ai { background: var(--blue); color: #fff; }
+
+  .compare-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-top: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare-table td:first-child { font-weight: 600; color: var(--muted); }
+  .compare-table td.now { color: var(--red); }
+  .compare-table td.ai { color: #059669; font-weight: 500; }
+
+  .check { color: var(--green); font-size: 16px; }
+  .cross { color: var(--red); font-size: 16px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 40px 24px;
+    font-size: 14px;
+  }
+  footer strong { color: #fff; font-family: 'Syne', sans-serif; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 640px) {
+    .hero-stats { gap: 24px; }
+    .stat-num { font-size: 28px; }
+    section { padding: 64px 20px; }
+    .compare-table { font-size: 12px; }
+    .compare-table td, .compare-table th { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-badge">
+    <span></span>
+    AI-Powered Platform Vision
+  </div>
+
+  <h1>PGfy <em>× AI</em></h1>
+  <p class="hero-sub">How artificial intelligence transforms every touchpoint — for tenants, owners, and the business — from finding a room to signing a lease.</p>
+
+  <div class="hero-cta">
+    <a href="#features" class="btn-primary">Explore Features</a>
+    <a href="#demo" class="btn-ghost">See Live Demo</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num"><em>8</em></div>
+      <div class="stat-label">AI Features Planned</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>3</em></div>
+      <div class="stat-label">Personas Served</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>4</em></div>
+      <div class="stat-label">Rollout Phases</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>∞</em></div>
+      <div class="stat-label">Competitive Moat</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV PILLS ── -->
+<nav class="nav-pills" id="nav">
+  <button class="pill active" onclick="scrollTo('home')">Home</button>
+  <button class="pill" onclick="scrollTo('philosophy')">Philosophy</button>
+  <button class="pill" onclick="scrollTo('features')">Features</button>
+  <button class="pill" onclick="scrollTo('demo')">Live Demo</button>
+  <button class="pill" onclick="scrollTo('roadmap')">Roadmap</button>
+  <button class="pill" onclick="scrollTo('impact')">Business Impact</button>
+  <button class="pill" onclick="scrollTo('comparison')">Before vs After</button>
+</nav>
+
+<!-- ── PHILOSOPHY ── -->
+<section id="philosophy">
+  <div class="reveal">
+    <span class="section-eyebrow">The Big Picture</span>
+    <h2 class="section-title">AI that solves &amp; AI that delights</h2>
+    <p class="section-desc">Every business has two jobs: solve the problem, and deliver an experience people remember. AI should do both — but most platforms only use it for one.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px" class="reveal reveal-delay-1">
+    <div class="feature-card blue" style="cursor:default">
+      <div class="card-icon blue">⚙️</div>
+      <div class="card-tag blue">Solve The Problem</div>
+      <div class="card-title">Operational AI</div>
+      <div class="card-desc">Automates the painful, repetitive parts of running a rental business — reminders, reconciliation, fraud checks, document generation. This reduces cost and errors.</div>
+      <div style="font-size:13px;color:var(--muted);padding:10px 14px;background:var(--paper);border-radius:8px;">Examples: Rent reminders, auto-invoicing, payment anomaly detection, KYC risk scoring</div>
+    </div>
+    <div class="feature-card green" style="cursor:default">
+      <div class="card-icon green">✨</div>
+      <div class="card-tag green">Deliver The Experience</div>
+      <div class="card-title">Experience AI</div>
+      <div class="card-desc">Makes PGfy feel like a smart assistant that understands you — not just a listing site. This is what creates loyalty, word-of-mouth, and a moat competitors can't copy.</div>
+      <div style="font-size:13px;color:var(--muted);padding:10px 14px;background:var(--paper);border-radius:8px;">Examples: Conversational search, lease plain-English explainer, smart pricing insights, occupancy forecasting</div>
+    </div>
+  </div>
+
+  <div class="feature-card" style="cursor:default;border-color:var(--blue);background:var(--blue-light)" class="reveal reveal-delay-2">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="font-size:32px">💡</div>
+      <div>
+        <div style="font-weight:700;font-size:18px;font-family:Syne,sans-serif;color:var(--blue)">The Strategic Insight</div>
+        <div style="color:#374151;font-size:15px;line-height:1.7;margin-top:4px">Every competitor in India can build a booking system. Very few can build an AI layer that makes owners feel like they have a business analyst and tenants feel like they have a personal concierge. <strong>That is the moat.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── FEATURES BY PERSONA ── -->
+<section id="features">
+  <div class="reveal">
+    <span class="section-eyebrow">AI Features</span>
+    <h2 class="section-title">Built for everyone<br>on the platform</h2>
+    <p class="section-desc">Different AI features serve different people. Explore by persona to see exactly how AI changes their experience.</p>
+  </div>
+
+  <div class="persona-tabs reveal reveal-delay-1">
+    <button class="ptab active-tenant" onclick="switchPersona('tenant')">🎓 For Tenants</button>
+    <button class="ptab" onclick="switchPersona('owner')">🏠 For Owners</button>
+    <button class="ptab" onclick="switchPersona('admin')">📊 For PGfy Admin</button>
+  </div>
+
+  <!-- TENANT PANEL -->
+  <div class="persona-panel visible" id="panel-tenant">
+    <div class="feature-grid">
+      <div class="feature-card blue reveal">
+        <div class="card-icon blue">🤖</div>
+        <div class="card-tag blue">Conversational Search</div>
+        <div class="card-title">AI Room Finder</div>
+        <div class="card-desc">Instead of filtering through 50 listings, tenants just type: "PG near Koramangala under ₹8,000, with food, for a girl." AI instantly surfaces the top 3 matches and explains why.</div>
+        <div class="card-impact blue">
+          <span>🎯</span>
+          <div><div class="imp-val">5x</div><div style="font-size:12px;color:var(--muted)">faster property discovery</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card blue reveal reveal-delay-1">
+        <div class="card-icon blue">📄</div>
+        <div class="card-tag blue">Agreement Intelligence</div>
+        <div class="card-title">Lease Plain-English Explainer</div>
+        <div class="card-desc">Most tenants don't read agreements. AI reads the full legal document and tells them: "Your lock-in is 3 months. If you leave early, you pay ₹200/day. Your rent goes up 10% in Year 2." No surprises.</div>
+        <div class="card-impact blue">
+          <span>📉</span>
+          <div><div class="imp-val">-70%</div><div style="font-size:12px;color:var(--muted)">lease-related disputes</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card blue reveal reveal-delay-2">
+        <div class="card-icon blue">🎫</div>
+        <div class="card-tag blue">Smart Support</div>
+        <div class="card-title">AI Support Tickets</div>
+        <div class="card-desc">Tenant raises an issue: "My AC isn't working." AI categorizes it, checks if it was reported before, suggests first steps, and auto-escalates to the owner if unresolved in 24 hours.</div>
+        <div class="card-impact blue">
+          <span>⚡</span>
+          <div><div class="imp-val">4h</div><div style="font-size:12px;color:var(--muted)">avg resolution (vs 2 days)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OWNER PANEL -->
+  <div class="persona-panel" id="panel-owner">
+    <div class="feature-grid">
+      <div class="feature-card green reveal">
+        <div class="card-icon green">💰</div>
+        <div class="card-tag green">Revenue Intelligence</div>
+        <div class="card-title">Smart Pricing Advisor</div>
+        <div class="card-desc">AI analyses similar PGs in your area, current occupancy demand, and seasonal trends. It tells you: "You're charging ₹8,000. Similar properties nearby charge ₹9,500. You could earn ₹18,000 more per month."</div>
+        <div class="card-impact green">
+          <span>📈</span>
+          <div><div class="imp-val">+22%</div><div style="font-size:12px;color:var(--muted)">avg revenue per property</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card green reveal reveal-delay-1">
+        <div class="card-icon green">📊</div>
+        <div class="card-tag green">Predictive Analytics</div>
+        <div class="card-title">Occupancy Forecasting</div>
+        <div class="card-desc">AI predicts which rooms will be vacant next month based on lease expiry dates, historical turnover, and regional demand signals. Owners can proactively market before vacancies happen — not after.</div>
+        <div class="card-impact green">
+          <span>🏠</span>
+          <div><div class="imp-val">-15 days</div><div style="font-size:12px;color:var(--muted)">avg vacancy period</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card green reveal reveal-delay-2">
+        <div class="card-icon green">✍️</div>
+        <div class="card-tag green">Content AI</div>
+        <div class="card-title">Listing Optimizer</div>
+        <div class="card-desc">Owner uploads photos and basic details. AI writes a compelling, SEO-friendly property description highlighting the best features, nearby landmarks, and unique selling points — instantly.</div>
+        <div class="card-impact green">
+          <span>👀</span>
+          <div><div class="imp-val">3x</div><div style="font-size:12px;color:var(--muted)">more listing views</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card green reveal">
+        <div class="card-icon green">💬</div>
+        <div class="card-tag green">Nudge Engine</div>
+        <div class="card-title">Smart Payment Reminders</div>
+        <div class="card-desc">AI personalizes rent reminder messages based on tenant payment history. Reliable payers get a gentle nudge. Late-paying tenants get an earlier, firmer message. Reduces defaults without awkward owner-tenant confrontations.</div>
+        <div class="card-impact green">
+          <span>📉</span>
+          <div><div class="imp-val">-40%</div><div style="font-size:12px;color:var(--muted)">late payment rate</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="persona-panel" id="panel-admin">
+    <div class="feature-grid">
+      <div class="feature-card amber reveal">
+        <div class="card-icon amber">🔍</div>
+        <div class="card-tag amber">Risk AI</div>
+        <div class="card-title">Fraud & Risk Detection</div>
+        <div class="card-desc">AI flags suspicious patterns: duplicate KYC documents, property listings that look copy-pasted, owners with abnormal rejection rates, payment anomalies. Compliance team focuses only on flagged cases.</div>
+        <div class="card-impact amber">
+          <span>🛡️</span>
+          <div><div class="imp-val">-85%</div><div style="font-size:12px;color:var(--muted)">manual review workload</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card amber reveal reveal-delay-1">
+        <div class="card-icon amber">📋</div>
+        <div class="card-tag amber">Compliance AI</div>
+        <div class="card-title">Agreement Anomaly Alerts</div>
+        <div class="card-desc">AI scans all active agreements and flags ones that are about to expire without renewal action, have unusual lease clauses, or show a pattern of early exits — giving the compliance team proactive visibility.</div>
+        <div class="card-impact amber">
+          <span>⏱️</span>
+          <div><div class="imp-val">100%</div><div style="font-size:12px;color:var(--muted)">agreement coverage (vs sampling)</div></div>
+        </div>
+      </div>
+
+      <div class="feature-card amber reveal reveal-delay-2">
+        <div class="card-icon amber">📈</div>
+        <div class="card-tag amber">Business Intelligence</div>
+        <div class="card-title">City-Level Demand Intelligence</div>
+        <div class="card-desc">AI analyses booking trends, search queries, and conversion data to tell the PGfy team: "Demand in Pune's Wakad area is 3x supply. You need 20 more PG listings there." Drives market expansion strategy.</div>
+        <div class="card-impact amber">
+          <span>🗺️</span>
+          <div><div class="imp-val">Data-driven</div><div style="font-size:12px;color:var(--muted)">expansion decisions</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── LIVE DEMO ── -->
+<section id="demo">
+  <div class="reveal">
+    <span class="section-eyebrow">Interactive Demo</span>
+    <h2 class="section-title">See the AI<br>in action</h2>
+    <p class="section-desc">Click a scenario to see how PGfy's AI assistant responds to real situations across tenant, owner, and compliance use cases.</p>
+  </div>
+
+  <div class="demo-wrap reveal reveal-delay-1">
+    <div class="demo-sidebar">
+      <h3>Pick a scenario</h3>
+      <p>These are real conversations PGfy's AI will handle — automatically, 24/7, without any human intervention needed.</p>
+      <div class="demo-scenarios">
+        <button class="scenario-btn active" onclick="loadScenario('tenant-search')">
+          🎓 Tenant: Find me a PG
+          <span>Conversational property search</span>
+        </button>
+        <button class="scenario-btn" onclick="loadScenario('lease-explain')">
+          📄 Tenant: Explain my agreement
+          <span>AI lease summarizer</span>
+        </button>
+        <button class="scenario-btn" onclick="loadScenario('owner-pricing')">
+          💰 Owner: Am I charging the right rent?
+          <span>Smart pricing advisor</span>
+        </button>
+        <button class="scenario-btn" onclick="loadScenario('owner-vacancy')">
+          📊 Owner: Vacancy forecast
+          <span>Predictive occupancy AI</span>
+        </button>
+        <button class="scenario-btn" onclick="loadScenario('fraud-flag')">
+          🛡️ Admin: Suspicious listing flagged
+          <span>Fraud detection AI</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-window">
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-header-text">
+          <h4>PGfy AI Assistant</h4>
+          <p>Powered by Claude AI</p>
+        </div>
+        <div class="chat-status"></div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-wrap">
+        <input class="chat-input" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── ROADMAP ── -->
+<section id="roadmap">
+  <div class="reveal">
+    <span class="section-eyebrow">AI Rollout Plan</span>
+    <h2 class="section-title">Building the AI<br>layer in phases</h2>
+    <p class="section-desc">AI is not built in one shot. It's layered in — starting with the features that have the highest impact and lowest complexity, scaling up as the platform matures.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-dot phase1">🏗️</div>
+      <div class="tl-content">
+        <div class="tl-phase">Phase 1 — With App Launch (Months 1–9)</div>
+        <div class="tl-title">AI-Ready Foundation</div>
+        <div class="tl-desc">The platform is built with AI in mind from Day 1. Every user interaction — searches, bookings, payments, support tickets — is logged in a structured way so AI can learn from it later. The first visible AI features go live here.</div>
+        <div class="tl-features">
+          <span class="tl-feat blue">🤖 AI Room Finder (chatbot search)</span>
+          <span class="tl-feat blue">📄 Lease Plain-English Explainer</span>
+          <span class="tl-feat blue">💬 Smart Rent Reminders</span>
+          <span class="tl-feat blue">🎫 AI Support Ticket Triage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal reveal-delay-1">
+      <div class="tl-dot phase2">📈</div>
+      <div class="tl-content">
+        <div class="tl-phase">Phase 2 — Post Launch (Months 10–15)</div>
+        <div class="tl-title">Intelligence Layer</div>
+        <div class="tl-desc">With real data flowing in — 1,000+ properties, 10,000+ tenants — AI gets smart. Pricing recommendations become accurate because there's real market data to compare against. Fraud detection learns patterns from actual bad actors.</div>
+        <div class="tl-features">
+          <span class="tl-feat purple">💰 Smart Pricing Advisor</span>
+          <span class="tl-feat purple">✍️ Listing Optimizer</span>
+          <span class="tl-feat purple">🛡️ Fraud & Risk Detection</span>
+          <span class="tl-feat purple">📋 Agreement Anomaly Alerts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal reveal-delay-2">
+      <div class="tl-dot phase3">🔮</div>
+      <div class="tl-content">
+        <div class="tl-phase">Phase 3 — Scale (Months 16–24)</div>
+        <div class="tl-title">Predictive AI</div>
+        <div class="tl-desc">AI moves from reactive to predictive. Instead of telling owners what happened, it tells them what will happen. Occupancy forecasting, demand prediction, and churn signals give owners and PGfy a genuine business intelligence advantage.</div>
+        <div class="tl-features">
+          <span class="tl-feat green">📊 Occupancy Forecasting</span>
+          <span class="tl-feat green">🗺️ City Demand Intelligence</span>
+          <span class="tl-feat green">📉 Tenant Churn Prediction</span>
+          <span class="tl-feat green">⚙️ Auto-renewal Negotiation AI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-dot phase4">🚀</div>
+      <div class="tl-content">
+        <div class="tl-phase">Phase 4 — Market Leadership (Month 24+)</div>
+        <div class="tl-title">The Moat — AI No Competitor Can Replicate</div>
+        <div class="tl-desc">By this point, PGfy has years of proprietary Indian rental market data that no competitor has. The AI trained on this data becomes a strategic asset — not just a product feature. This is the moat.</div>
+        <div class="tl-features">
+          <span class="tl-feat amber">🧠 PGfy Proprietary Rental Market Model</span>
+          <span class="tl-feat amber">🤝 AI Lease Negotiation Assistant</span>
+          <span class="tl-feat amber">📱 Hyper-personalized Tenant Experience</span>
+          <span class="tl-feat amber">🏙️ City Expansion Opportunity Scoring</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── BUSINESS IMPACT ── -->
+<section id="impact" style="max-width:1100px">
+  <div class="reveal">
+    <span class="section-eyebrow">Business Impact</span>
+    <h2 class="section-title">What AI does for<br>the business</h2>
+    <p class="section-desc">AI isn't just a feature — it changes the unit economics of the entire platform. Lower ops cost, higher owner retention, better tenant experience.</p>
+  </div>
+
+  <div class="impact-grid reveal reveal-delay-1">
+    <div class="impact-card">
+      <div class="impact-num blue">-60%</div>
+      <div class="impact-label">Reduction in customer support workload through AI ticket resolution</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num green">+35%</div>
+      <div class="impact-label">Owner retention when using AI pricing + forecasting tools</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num amber">5×</div>
+      <div class="impact-label">Faster time to booking compared to traditional filter-based search</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num red">-70%</div>
+      <div class="impact-label">Lease disputes when tenants use the AI plain-English agreement explainer</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num blue">₹∞</div>
+      <div class="impact-label">Proprietary data value — competitors cannot buy or replicate this moat</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num green">24/7</div>
+      <div class="impact-label">AI operates while your team sleeps — no ops cost for routine tasks</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── BEFORE / AFTER ── -->
+<section id="comparison">
+  <div class="reveal">
+    <span class="section-eyebrow">Before vs After</span>
+    <h2 class="section-title">PGfy without AI<br>vs PGfy with AI</h2>
+    <p class="section-desc">This is the experience delta that turns a good product into a market-defining one.</p>
+  </div>
+
+  <div class="reveal reveal-delay-1" style="overflow-x:auto">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th class="col-now">❌ Without AI</th>
+          <th class="col-ai">✅ With PGfy AI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tenant searches for a PG</td>
+          <td class="now">Manually filters 50+ listings. Overwhelmed. Drops off.</td>
+          <td class="ai">Types a sentence. Gets 3 perfect matches with explanations. Books in 10 minutes.</td>
+        </tr>
+        <tr>
+          <td>Tenant receives lease agreement</td>
+          <td class="now">Ignores 8-page PDF. Signs without understanding. Disputes later.</td>
+          <td class="ai">AI gives a 5-bullet plain English summary. Tenant understands what they're signing.</td>
+        </tr>
+        <tr>
+          <td>Owner wants to set rent</td>
+          <td class="now">Guesses based on gut feel or what they heard from a friend.</td>
+          <td class="ai">AI shows market data: "Charge ₹9,500 — you're losing ₹18K/month at your current price."</td>
+        </tr>
+        <tr>
+          <td>Owner has a vacancy</td>
+          <td class="now">Discovers vacancy after it happens. Scrambles to fill. Loses 2–3 weeks of rent.</td>
+          <td class="ai">AI predicts vacancy 30 days before. Owner starts marketing immediately.</td>
+        </tr>
+        <tr>
+          <td>Tenant submits a support issue</td>
+          <td class="now">WhatsApp message to owner. Owner forgets. Tenant frustrated. Leaves.</td>
+          <td class="ai">AI ticket created, categorized, owner notified, auto-escalated if no action in 24h.</td>
+        </tr>
+        <tr>
+          <td>Admin reviews new property listing</td>
+          <td class="now">Manual review of every listing. Takes days. Fraud slips through anyway.</td>
+          <td class="ai">AI pre-screens all listings, flags high-risk ones. Admin reviews only flagged cases.</td>
+        </tr>
+        <tr>
+          <td>Rent due reminder</td>
+          <td class="now">Generic SMS sent to everyone. Awkward. Owner-tenant relationship strained.</td>
+          <td class="ai">Personalized message: gentle for reliable payers, earlier and firmer for late payers.</td>
+        </tr>
+        <tr>
+          <td>PGfy decides where to expand next</td>
+          <td class="now">Based on founder intuition or sales team's anecdotal feedback.</td>
+          <td class="ai">AI analyses search demand vs supply gap by city/area. Data-backed expansion.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <strong>PGfy v2 × AI</strong><br>
+  <span style="margin-top:8px;display:block">This document is confidential and intended for internal stakeholders only.</span>
+</footer>
+
+<script>
+// ── PERSONA TABS ──
+const tabs = document.querySelectorAll('.ptab');
+function switchPersona(persona) {
+  document.querySelectorAll('.persona-panel').forEach(p => p.classList.remove('visible'));
+  document.getElementById('panel-' + persona).classList.add('visible');
+  tabs.forEach(t => t.className = 'ptab');
+  event.target.className = 'ptab active-' + persona;
+}
+
+// ── NAV ACTIVE ──
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── CHAT SCENARIOS ──
+const scenarios = {
+  'tenant-search': [
+    { role: 'user', text: 'I need a PG near Koramangala, Bangalore. Budget ₹8,000, food included, for a girl.' },
+    { role: 'ai', html: `<strong>Found 3 perfect matches for you! 🏠</strong>
+      Based on your requirements, here are the top picks:<br><br>
+      <b>1. Sunita Ladies PG, HSR Layout</b><br>
+      <span class="chip green">₹7,800/mo</span> <span class="chip">Food ✓</span> <span class="chip">2.1km from Koramangala</span><br>
+      AC rooms, 24/7 security, WiFi included<br><br>
+      <b>2. Green Leaf Residency, Koramangala 4th Block</b><br>
+      <span class="chip green">₹7,500/mo</span> <span class="chip">Food ✓</span> <span class="chip">0.8km from hub</span><br>
+      Newly renovated, washer, Netflix common room<br><br>
+      <b>3. Comfort Stay, BTM Layout</b><br>
+      <span class="chip green">₹8,000/mo</span> <span class="chip">Food ✓</span> <span class="chip">3km from Koramangala</span><br>
+      Best reviews (4.8★), gym access included<br><br>
+      Want me to schedule a visit or explain any of these in more detail?` },
+  ],
+  'lease-explain': [
+    { role: 'user', text: 'I just received my PG agreement. Can you explain it to me in simple terms?' },
+    { role: 'ai', html: `Sure! Here's your lease in plain English — no legal jargon:<br><br>
+      <b>📅 Duration</b>: 11 months starting 1 March 2026<br>
+      <b>🔒 Lock-in period</b>: <span class="chip amber">3 months</span> — you cannot leave before 1 June without a penalty<br>
+      <b>💸 Early exit penalty</b>: ₹200 per day for every day remaining in the lock-in<br>
+      <b>💰 Rent escalation</b>: If you renew, rent goes up by <span class="chip amber">10%</span><br>
+      <b>🏠 Notice period</b>: Give 30 days notice before you leave<br>
+      <b>🔑 Security deposit</b>: ₹15,000 — refunded within 15 days of checkout (subject to deductions for damages)<br><br>
+      <b>⚠️ Watch out for:</b> The clause about having guests — overnight guests need prior written approval from the owner.<br><br>
+      Anything you'd like me to clarify further?` },
+  ],
+  'owner-pricing': [
+    { role: 'user', text: 'Am I charging the right rent for my PG in Baner, Pune? I charge ₹8,000 per bed.' },
+    { role: 'ai', html: `Great question! Here's what the market data says for Baner, Pune right now:<br><br>
+      <b>📊 Market Benchmark (Baner area)</b><br>
+      <span class="chip">Budget PGs: ₹6,500–7,500</span><br>
+      <span class="chip green">Mid-range (like yours): ₹8,500–10,000</span><br>
+      <span class="chip amber">Premium: ₹11,000–14,000</span><br><br>
+      <b>Your property at ₹8,000 is slightly below market.</b><br><br>
+      Based on your amenities (food, WiFi, AC), you could comfortably charge <b>₹9,000–9,500</b>.<br><br>
+      💡 <b>Opportunity:</b> At ₹9,200 with 10 beds, you'd earn <b>₹12,000 more per month</b> — ₹1.44 lakh extra per year.<br><br>
+      Want me to suggest how to position this price increase with existing tenants?` },
+  ],
+  'owner-vacancy': [
+    { role: 'user', text: 'Show me my vacancy forecast for next 2 months.' },
+    { role: 'ai', html: `Here's your occupancy forecast for <b>April–May 2026</b>:<br><br>
+      <b>🔴 High Risk of Vacancy</b><br>
+      Room 201 — Priya's lease expires <b>15 April</b>. She hasn't responded to renewal. <span class="chip amber">Start marketing now</span><br><br>
+      Room 305 — Sneha has searched for other PGs on the app twice this week. <span class="chip amber">At-risk tenant</span><br><br>
+      <b>🟡 Watch</b><br>
+      Room 102 — Ravi's lease expires 1 June. Follow up recommended by 1 May.<br><br>
+      <b>🟢 Stable (rest of property)</b><br>
+      8 rooms locked in through September or beyond.<br><br>
+      <b>Recommended actions:</b><br>
+      • Post Room 201 on listing today — 15 days avg to fill<br>
+      • Send a personalised retention offer to Sneha (Room 305)<br><br>
+      Want me to draft the retention message for Sneha?` },
+  ],
+  'fraud-flag': [
+    { role: 'user', text: 'Any suspicious activity in today\'s property submissions?' },
+    { role: 'ai', html: `<span class="chip amber">⚠️ 2 flags detected</span> out of 14 submissions today:<br><br>
+      <b>🔴 High Risk — ID: PROP-2847</b><br>
+      • Property images match an existing listing (PROP-1923) — possible duplicate<br>
+      • Owner's Aadhaar was used in a rejected listing 3 months ago<br>
+      • Address coordinates show residential building, not a PG-zoned property<br>
+      <span class="chip amber">Recommendation: Reject and flag owner account</span><br><br>
+      <b>🟡 Medium Risk — ID: PROP-2851</b><br>
+      • Property description appears copy-pasted from a competitor website<br>
+      • No media uploaded yet (only placeholder images)<br>
+      <span class="chip">Recommendation: Request original photos before approval</span><br><br>
+      <b>✅ 12 listings:</b> Cleared for approval with no anomalies detected.<br><br>
+      Shall I auto-reject PROP-2847 and send the owner a notice?` },
+  ],
+};
+
+let currentScenario = 'tenant-search';
+
+function loadScenario(key) {
+  currentScenario = key;
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  event.target.closest('.scenario-btn').classList.add('active');
+  renderChat(scenarios[key]);
+}
+
+function renderChat(messages) {
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = '';
+
+  messages.forEach((msg, i) => {
+    setTimeout(() => {
+      if (msg.role === 'ai' && i > 0) {
+        // Show typing indicator first
+        const typing = document.createElement('div');
+        typing.className = 'msg ai';
+        typing.id = 'typing-' + i;
+        typing.innerHTML = `<div class="msg-avatar ai">🤖</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+        container.appendChild(typing);
+        container.scrollTop = container.scrollHeight;
+
+        setTimeout(() => {
+          document.getElementById('typing-' + i)?.remove();
+          appendMsg(msg, container);
+        }, 1200);
+      } else {
+        appendMsg(msg, container);
+      }
+    }, i * (i === 0 ? 0 : 1400));
+  });
+}
+
+function appendMsg(msg, container) {
+  const el = document.createElement('div');
+  el.className = 'msg ' + msg.role;
+  const avatar = msg.role === 'ai' ? '<div class="msg-avatar ai">🤖</div>' : '<div class="msg-avatar user">👤</div>';
+  const content = msg.html
+    ? `<div class="msg-bubble">${msg.html}</div>`
+    : `<div class="msg-bubble">${msg.text}</div>`;
+  el.innerHTML = avatar + content;
+  container.appendChild(el);
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const container = document.getElementById('chatMessages');
+  appendMsg({ role: 'user', text }, container);
+
+  // Show typing
+  const typing = document.createElement('div');
+  typing.className = 'msg ai';
+  typing.id = 'typing-custom';
+  typing.innerHTML = `<div class="msg-avatar ai">🤖</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById('typing-custom')?.remove();
+    appendMsg({
+      role: 'ai',
+      html: `Thanks for your message! In the live product, this is where PGfy's AI (powered by Claude) would analyse your request and give you a real-time, personalised response — whether it's finding properties, explaining your lease, or giving pricing insights. The demo scenarios above show examples of these real responses.`
+    }, container);
+  }, 1500);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  renderChat(scenarios['tenant-search']);
+
+  // Counter animation for hero stats
+  document.querySelectorAll('.stat-num').forEach(el => {
+    el.style.opacity = '0';
+    setTimeout(() => { el.style.transition = 'opacity 0.5s'; el.style.opacity = '1'; }, 800);
+  });
+});
+</script>
+</body>
+</html>
