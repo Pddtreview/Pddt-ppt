@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGfy v2 — Full App Development Process</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0C0F1A;
+  --surface: #141828;
+  --surface2: #1C2235;
+  --border: rgba(255,255,255,0.07);
+  --border-bright: rgba(255,255,255,0.15);
+  --text: #E8EAF0;
+  --muted: #7A8099;
+  --blue: #3B82F6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --blue-border: rgba(59,130,246,0.3);
+  --green: #10B981;
+  --green-dim: rgba(16,185,129,0.12);
+  --green-border: rgba(16,185,129,0.3);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.12);
+  --amber-border: rgba(245,158,11,0.3);
+  --purple: #8B5CF6;
+  --purple-dim: rgba(139,92,246,0.12);
+  --purple-border: rgba(139,92,246,0.3);
+  --red: #EF4444;
+  --cyan: #06B6D4;
+  --cyan-dim: rgba(6,182,212,0.12);
+  --cyan-border: rgba(6,182,212,0.3);
+
+  /* NEW/ADDED features highlight */
+  --new: #F97316;
+  --new-dim: rgba(249,115,22,0.15);
+  --new-border: rgba(249,115,22,0.4);
+  --new-glow: 0 0 20px rgba(249,115,22,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1,h2,h3,h4 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.5px;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(139,92,246,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(249,115,22,0.04) 0%, transparent 70%);
+}
+
+.hero-line {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent);
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--new-dim);
+  border: 1px solid var(--new-border);
+  color: var(--new);
+  padding: 6px 18px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 36px; position: relative;
+  animation: fadeUp 1s ease both;
+}
+
+.hero-badge .dot { width: 6px; height: 6px; background: var(--new); border-radius: 50%; animation: blink 1.5s infinite; }
+
+.hero h1 {
+  font-size: clamp(52px, 9vw, 110px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 28px;
+  position: relative;
+  animation: fadeUp 1s 0.1s ease both;
+}
+
+.hero h1 .accent {
+  display: block;
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #F97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.75;
+  margin-bottom: 20px;
+  position: relative;
+  animation: fadeUp 1s 0.2s ease both;
+}
+
+.new-legend {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--new-dim);
+  border: 1px solid var(--new-border);
+  padding: 8px 20px; border-radius: 8px;
+  font-size: 13px; color: var(--new);
+  margin-bottom: 48px;
+  animation: fadeUp 1s 0.25s ease both;
+  position: relative;
+}
+
+.new-legend strong { font-weight: 700; }
+
+.hero-scroll {
+  position: relative; animation: fadeUp 1s 0.4s ease both;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 13px;
+  margin-top: 48px;
+}
+
+.scroll-line { width: 40px; height: 1px; background: var(--border-bright); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ── STICKY NAV ── */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(12,15,26,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; padding: 14px 0; white-space: nowrap; }
+.nav-logo span { color: var(--blue); }
+
+.nav-links { display: flex; gap: 2px; overflow-x: auto; padding: 10px 0; }
+.nav-link {
+  padding: 6px 14px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+  cursor: pointer; white-space: nowrap; color: var(--muted);
+  transition: all 0.2s; border: none; background: transparent;
+  font-family: 'Epilogue', sans-serif;
+}
+.nav-link:hover { color: var(--text); background: var(--surface); }
+.nav-link.active { color: var(--blue); background: var(--blue-dim); }
+
+/* ── SECTIONS ── */
+.section {
+  padding: 100px 24px;
+  max-width: 1140px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
+}
+
+.section-label::before {
+  content: ''; width: 20px; height: 1px; background: var(--muted);
+}
+
+.section-title {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900; line-height: 1.05;
+  color: #fff; margin-bottom: 20px;
+  letter-spacing: -1.5px;
+}
+
+.section-desc {
+  font-size: 18px; color: var(--muted);
+  max-width: 560px; line-height: 1.75;
+  margin-bottom: 64px;
+}
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* ── NEW TAG ── */
+.new-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--new-dim);
+  border: 1px solid var(--new-border);
+  color: var(--new);
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  box-shadow: var(--new-glow);
+  animation: newPulse 3s infinite;
+}
+
+@keyframes newPulse {
+  0%,100% { box-shadow: 0 0 8px rgba(249,115,22,0.2); }
+  50% { box-shadow: 0 0 20px rgba(249,115,22,0.5); }
+}
+
+/* NEW card highlight */
+.card-new {
+  border-color: var(--new-border) !important;
+  background: linear-gradient(135deg, var(--new-dim) 0%, var(--surface) 100%) !important;
+  position: relative;
+}
+.card-new::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--new), transparent);
+  border-radius: 12px 12px 0 0;
+}
+
+/* ── PROCESS STEPS ── */
+.process-steps { display: flex; flex-direction: column; gap: 0; }
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  position: relative;
+}
+
+.step:not(:last-child) .step-line {
+  position: absolute;
+  left: 39px; top: 80px; bottom: -32px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--step-color, var(--blue)), transparent);
+}
+
+.step-left { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+.step-num {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 2px solid var(--step-color, var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--step-color, var(--blue));
+  background: var(--bg);
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.step:hover .step-num {
+  background: var(--step-color, var(--blue));
+  color: #fff;
+  box-shadow: 0 0 24px var(--step-color, var(--blue));
+}
+
+.step-content {
+  padding: 0 0 64px 0;
+}
+
+.step-phase-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--step-color, var(--blue));
+  margin-bottom: 8px;
+}
+
+.step-title {
+  font-size: 28px; font-weight: 700; color: #fff;
+  margin-bottom: 12px; font-family: 'Playfair Display', serif;
+}
+
+.step-desc {
+  font-size: 15px; color: var(--muted); line-height: 1.75;
+  margin-bottom: 24px; max-width: 620px;
+}
+
+.step-duration {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--step-color, var(--blue));
+  background: color-mix(in srgb, var(--step-color, var(--blue)) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--step-color, var(--blue)) 30%, transparent);
+  padding: 4px 12px; border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.step-tasks {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.task {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px; color: var(--text);
+  transition: all 0.2s;
+}
+
+.task:hover { border-color: var(--border-bright); background: var(--surface2); }
+
+.task-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.task-text { line-height: 1.5; }
+.task-text strong { color: #fff; font-weight: 600; }
+.task-text span { color: var(--muted); font-size: 13px; display: block; margin-top: 2px; }
+
+.task.new-task {
+  border-color: var(--new-border);
+  background: var(--new-dim);
+}
+.task.new-task:hover { border-color: var(--new); }
+.task.new-task .task-text strong { color: var(--new); }
+
+/* ── TECH STACK ── */
+.stack-categories { display: flex; flex-direction: column; gap: 32px; }
+
+.stack-category-title {
+  font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.stack-category-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.tech-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.25s;
+  cursor: default;
+}
+
+.tech-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
+
+.tech-icon { font-size: 28px; margin-bottom: 10px; }
+.tech-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.tech-purpose { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+.tech-card.new-tech {
+  border-color: var(--new-border);
+  background: linear-gradient(135deg, var(--new-dim), var(--surface));
+  box-shadow: var(--new-glow);
+}
+.tech-card.new-tech .tech-name { color: var(--new); }
+
+.tech-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 100px;
+  margin-bottom: 8px; letter-spacing: 0.8px; text-transform: uppercase;
+}
+.tech-badge.core { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+.tech-badge.new { background: var(--new-dim); color: var(--new); border: 1px solid var(--new-border); }
+.tech-badge.optional { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+/* ── ARCHITECTURE DIAGRAM ── */
+.arch-diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 40px;
+}
+
+.arch-row {
+  display: flex; gap: 12px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 8px;
+}
+
+.arch-arrow {
+  display: flex; justify-content: center;
+  color: var(--muted); font-size: 20px; margin: 8px 0;
+}
+
+.arch-box {
+  padding: 12px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid;
+  text-align: center;
+  min-width: 140px;
+  transition: all 0.2s;
+}
+
+.arch-box:hover { transform: scale(1.03); }
+
+.arch-box.blue { background: var(--blue-dim); border-color: var(--blue-border); color: var(--blue); }
+.arch-box.green { background: var(--green-dim); border-color: var(--green-border); color: var(--green); }
+.arch-box.purple { background: var(--purple-dim); border-color: var(--purple-border); color: var(--purple); }
+.arch-box.amber { background: var(--amber-dim); border-color: var(--amber-border); color: var(--amber); }
+.arch-box.cyan { background: var(--cyan-dim); border-color: var(--cyan-border); color: var(--cyan); }
+.arch-box.new { background: var(--new-dim); border-color: var(--new-border); color: var(--new); box-shadow: var(--new-glow); }
+.arch-box.surface { background: var(--surface2); border-color: var(--border-bright); color: var(--text); }
+
+.arch-label {
+  text-align: center; font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  transition: all 0.25s;
+}
+.card:hover { border-color: var(--border-bright); }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+/* ── PRINCIPLES ── */
+.principle {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 24px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px;
+  transition: all 0.2s;
+}
+.principle:hover { border-color: var(--border-bright); }
+.principle-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 900;
+  color: var(--border-bright);
+  flex-shrink: 0; line-height: 1;
+}
+.principle-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.principle-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+.principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+/* ── TIMELINE GANTT ── */
+.gantt {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin-bottom: 32px;
+}
+
+.gantt-header {
+  display: grid;
+  grid-template-columns: 180px repeat(9, 1fr);
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+}
+
+.gantt-header-cell {
+  padding: 12px 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); text-align: center; border-right: 1px solid var(--border);
+}
+.gantt-header-cell:first-child { text-align: left; padding-left: 20px; }
+
+.gantt-row {
+  display: grid;
+  grid-template-columns: 180px repeat(9, 1fr);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.gantt-row:last-child { border-bottom: none; }
+.gantt-row:hover { background: rgba(255,255,255,0.02); }
+
+.gantt-label {
+  padding: 14px 20px;
+  font-size: 13px; font-weight: 600; color: var(--text);
+  border-right: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+
+.gantt-cell {
+  border-right: 1px solid var(--border);
+  padding: 10px 4px;
+  display: flex; align-items: center; justify-content: center;
+}
+.gantt-cell:last-child { border-right: none; }
+
+.gantt-bar {
+  height: 24px; border-radius: 6px;
+  width: 90%; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: 0.5px;
+}
+.gantt-bar.blue { background: var(--blue-dim); border: 1px solid var(--blue-border); color: var(--blue); }
+.gantt-bar.green { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+.gantt-bar.purple { background: var(--purple-dim); border: 1px solid var(--purple-border); color: var(--purple); }
+.gantt-bar.amber { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); }
+.gantt-bar.cyan { background: var(--cyan-dim); border: 1px solid var(--cyan-border); color: var(--cyan); }
+.gantt-bar.new { background: var(--new-dim); border: 1px solid var(--new-border); color: var(--new); }
+
+/* ── MISSING ITEMS ── */
+.missing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+.missing-card {
+  background: var(--new-dim);
+  border: 1px solid var(--new-border);
+  border-radius: 14px; padding: 28px;
+  box-shadow: var(--new-glow);
+  position: relative; overflow: hidden;
+}
+
+.missing-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--new), transparent);
+}
+
+.missing-card-icon { font-size: 32px; margin-bottom: 16px; }
+.missing-card-tag { display: inline-block; background: var(--new); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 12px; }
+.missing-card-title { font-size: 18px; font-weight: 700; color: var(--new); margin-bottom: 10px; font-family: 'Playfair Display', serif; }
+.missing-card-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
+.missing-card-why { font-size: 13px; color: var(--text); background: rgba(0,0,0,0.2); padding: 10px 14px; border-radius: 8px; border-left: 3px solid var(--new); }
+.missing-card-why strong { color: var(--new); }
+
+/* ── CHECKLIST ── */
+.checklist { display: flex; flex-direction: column; gap: 10px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 18px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 14px; color: var(--text);
+  transition: all 0.2s; cursor: pointer;
+}
+.check-item:hover { border-color: var(--border-bright); }
+.check-item input[type=checkbox] { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--green); cursor: pointer; }
+.check-item label { cursor: pointer; line-height: 1.5; }
+.check-item label strong { color: #fff; display: block; }
+.check-item.new-check { border-color: var(--new-border); background: var(--new-dim); }
+.check-item.new-check label strong { color: var(--new); }
+
+/* ── TOOLTIP ── */
+[data-tip] { position: relative; }
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--surface2); border: 1px solid var(--border-bright);
+  color: var(--text); font-size: 12px; padding: 6px 12px; border-radius: 6px;
+  white-space: nowrap; z-index: 10; pointer-events: none;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 48px 24px; text-align: center;
+}
+footer .footer-logo { font-family: 'Playfair Display', serif; font-size: 28px; color: #fff; margin-bottom: 8px; }
+footer .footer-logo span { color: var(--blue); }
+footer p { color: var(--muted); font-size: 14px; }
+footer .new-note { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--new-dim); border: 1px solid var(--new-border); color: var(--new); padding: 8px 20px; border-radius: 8px; font-size: 13px; }
+
+@media (max-width: 640px) {
+  .step { grid-template-columns: 48px 1fr; gap: 16px; }
+  .step-num { width: 40px; height: 40px; font-size: 16px; }
+  .gantt-header, .gantt-row { grid-template-columns: 120px repeat(9, 1fr); }
+  .gantt-label { padding: 10px 12px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-badge"><div class="dot"></div>Master Development Blueprint</div>
+
+  <h1>
+    How We Build
+    <span class="accent">PGfy v2</span>
+  </h1>
+
+  <p class="hero-desc">The complete, step-by-step app development process — every phase, every tool, every decision — from idea to production launch.</p>
+
+  <div class="new-legend">
+    <span>🔶</span>
+    <strong>Orange highlight = Added by us</strong> — things missing from your original PRD that we recommend
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll to explore
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav" id="nav">
+  <div class="nav-logo">PGfy<span>.</span>v2</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="navTo('process')">Process</button>
+    <button class="nav-link" onclick="navTo('architecture')">Architecture</button>
+    <button class="nav-link" onclick="navTo('techstack')">Tech Stack</button>
+    <button class="nav-link" onclick="navTo('missing')">What We Added</button>
+    <button class="nav-link" onclick="navTo('timeline')">Timeline</button>
+    <button class="nav-link" onclick="navTo('principles')">Principles</button>
+    <button class="nav-link" onclick="navTo('launch')">Launch Checklist</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: FULL DEV PROCESS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="process">
+  <div class="reveal">
+    <div class="section-label">Step-by-Step</div>
+    <h2 class="section-title">The Full Development Process</h2>
+    <p class="section-desc">9 phases from zero to live product. Each phase has clear inputs, outputs, and must be complete before the next begins.</p>
+  </div>
+
+  <div class="process-steps">
+
+    <!-- STEP 1 -->
+    <div class="step reveal" style="--step-color: #3B82F6">
+      <div class="step-left">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 1 — Foundation</div>
+        <div class="step-title">Discovery, Planning & Design</div>
+        <div class="step-desc">Before a single line of code is written, the entire product is mapped out — every screen, every flow, every edge case. This phase is the most underestimated and the most important.</div>
+        <div class="step-duration">⏱ Weeks 1–3</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">📋</div><div class="task-text"><strong>Finalise PRD & SRS</strong><span>Lock all feature requirements. No new features after this point without formal sign-off.</span></div></div>
+          <div class="task"><div class="task-icon">🗺️</div><div class="task-text"><strong>User flow mapping</strong><span>Map every screen and user journey across Owner App, Tenant App, and Admin Dashboard.</span></div></div>
+          <div class="task"><div class="task-icon">🎨</div><div class="task-text"><strong>Figma wireframes + UI design</strong><span>Design all screens in Figma. Get client approval before development starts.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Design System creation <span class="new-tag">ADDED</span></strong><span>Build a shared component library in Figma — colours, typography, buttons, cards. This ensures consistency across both apps and reduces dev time by 30%.</span></div></div>
+          <div class="task"><div class="task-icon">🏗️</div><div class="task-text"><strong>Database schema design</strong><span>Design and review all PostgreSQL tables, relationships, and indexes. This must be done before backend starts.</span></div></div>
+          <div class="task"><div class="task-icon">📡</div><div class="task-text"><strong>API contract definition</strong><span>Define every API endpoint, request/response shape, and error codes in a shared Swagger doc.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Third-party API audit <span class="new-tag">ADDED</span></strong><span>Collect and test sandbox credentials for Doqfy, Hyperverge, Razorpay, PayU, MSG91 before development. Waiting for these during build is the #1 cause of delays.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step reveal" style="--step-color: #8B5CF6">
+      <div class="step-left">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 2 — Infrastructure</div>
+        <div class="step-title">Dev Environment & Backend Skeleton</div>
+        <div class="step-desc">Set up every piece of infrastructure before building features. This phase creates the foundation everything else runs on.</div>
+        <div class="step-duration">⏱ Weeks 3–5</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">☁️</div><div class="task-text"><strong>GCP project setup</strong><span>Cloud Run (backend hosting), Cloud SQL (PostgreSQL), Cloud Storage (media & docs), IAM roles.</span></div></div>
+          <div class="task"><div class="task-icon">🔀</div><div class="task-text"><strong>Git repos + CI/CD pipeline</strong><span>GitHub org with 4 repos. GitHub Actions: push to main → auto-deploy to staging. No manual deployments.</span></div></div>
+          <div class="task"><div class="task-icon">🗄️</div><div class="task-text"><strong>Database migrations setup</strong><span>Use node-pg-migrate. Write and run initial migrations — users, properties, inventory tables.</span></div></div>
+          <div class="task"><div class="task-icon">🔐</div><div class="task-text"><strong>Auth system (OTP + JWT + RBAC)</strong><span>MSG91 OTP → JWT with role payload → RBAC middleware on all routes. Test all 4 roles: OWNER, TENANT, ADMIN, MANAGER.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Staging vs Production environment separation <span class="new-tag">ADDED</span></strong><span>Two completely separate GCP environments. All development on staging. Production is sacred — only deploy after QA sign-off.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Secrets management (GCP Secret Manager) <span class="new-tag">ADDED</span></strong><span>Never hardcode API keys. All secrets (Razorpay, Doqfy, DB passwords) stored in GCP Secret Manager and injected at runtime.</span></div></div>
+          <div class="task"><div class="task-icon">📖</div><div class="task-text"><strong>Swagger /api/docs live</strong><span>API documentation available from Day 1. Every new endpoint is documented the same day it's built.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step reveal" style="--step-color: #10B981">
+      <div class="step-left">
+        <div class="step-num">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 3 — Owner App</div>
+        <div class="step-title">Property Owner Side (Backend + App)</div>
+        <div class="step-desc">Build the entire owner-facing experience — onboarding, property creation, inventory, bookings, and manager management.</div>
+        <div class="step-duration">⏱ Weeks 5–11</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">📱</div><div class="task-text"><strong>React Native Owner App scaffold</strong><span>Navigation structure (React Navigation), Redux/Zustand state, shared UI component library connected to Figma tokens.</span></div></div>
+          <div class="task"><div class="task-icon">🪪</div><div class="task-text"><strong>Owner KYC flow (Hyperverge)</strong><span>Document upload, liveness check, Hyperverge webhook → update KYC status. Owner cannot go live until KYC is approved.</span></div></div>
+          <div class="task"><div class="task-icon">🏘️</div><div class="task-text"><strong>Property creation wizard</strong><span>Multi-step form: type selection → basic info → amenities → pricing → media upload → submit for admin approval.</span></div></div>
+          <div class="task"><div class="task-icon">🛏️</div><div class="task-text"><strong>Inventory management</strong><span>PG: Room → Bed. Flat: Unit. Homestay/Resort: Room/Villa. Single inventory_units table handles all models cleanly.</span></div></div>
+          <div class="task"><div class="task-icon">👨‍💼</div><div class="task-text"><strong>Manager/Warden add flow</strong><span>OTP-verified manager addition. Permission assignment: which managers can collect cash payments.</span></div></div>
+          <div class="task"><div class="task-icon">📅</div><div class="task-text"><strong>Booking management</strong><span>Approve/reject requests, assign room/bed/unit, check-in & check-out tracking, room change approvals.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Push notifications (Firebase FCM) <span class="new-tag">ADDED</span></strong><span>Real-time alerts for new booking requests, KYC status updates, payment confirmations. Without this, owners miss bookings.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step reveal" style="--step-color: #06B6D4">
+      <div class="step-left">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 4 — Tenant App</div>
+        <div class="step-title">Tenant App + Online Payments</div>
+        <div class="step-desc">Build the full tenant discovery, booking, and payment experience. This is the customer-facing product — UI quality and speed matter most here.</div>
+        <div class="step-duration">⏱ Weeks 11–17</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">📱</div><div class="task-text"><strong>React Native Tenant App scaffold</strong><span>Separate build from Owner App but shares UI component library. Navigation, auth, home screen.</span></div></div>
+          <div class="task"><div class="task-icon">🔍</div><div class="task-text"><strong>Property discovery + filters</strong><span>Search by city/location, filter by type, budget, food, gender, duration. Property cards with photos.</span></div></div>
+          <div class="task"><div class="task-icon">🏠</div><div class="task-text"><strong>Property detail screen</strong><span>Image gallery, amenities, pricing breakdown, availability, reviews, map, Book Now CTA.</span></div></div>
+          <div class="task"><div class="task-icon">💳</div><div class="task-text"><strong>Online payments (Razorpay + PayU)</strong><span>Payment initiation, webhook handling, success/failure states, auto invoice generation with GST.</span></div></div>
+          <div class="task"><div class="task-icon">🧾</div><div class="task-text"><strong>Tenant dashboard</strong><span>Active booking status, payment history, invoice downloads, agreement access.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Tenant KYC before check-in <span class="new-tag">ADDED</span></strong><span>Mandatory KYC verification before physical check-in. This is a compliance requirement that was understated in the PRD — it needs a dedicated flow with status tracking.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Deep linking + App sharing <span class="new-tag">ADDED</span></strong><span>Property listings shareable via link that opens directly in the app. Critical for word-of-mouth growth — tenants share rooms with friends.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step reveal" style="--step-color: #F59E0B">
+      <div class="step-left">
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 5 — Core Features</div>
+        <div class="step-title">Agreements, Smart Lease & Visitor OTP</div>
+        <div class="step-desc">The three most technically complex features. Each needs dedicated engineering focus and must be tested extensively before going live.</div>
+        <div class="step-duration">⏱ Weeks 17–22</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">📝</div><div class="task-text"><strong>Doqfy E-Agreement integration</strong><span>Auto-generate agreement on booking approval → send to Doqfy API → get signing link → Aadhaar eSign flow → webhook on sign completion → store PDF to GCP.</span></div></div>
+          <div class="task"><div class="task-icon">⚖️</div><div class="task-text"><strong>Smart lease engine</strong><span>Lock-in periods, early exit penalty calculation, rent escalation on renewal, auto-expiry cron jobs, renewal workflow.</span></div></div>
+          <div class="task"><div class="task-icon">🚪</div><div class="task-text"><strong>Visitor OTP system</strong><span>Tenant generates OTP → time-based expiry → guard/manager verifies → immutable visitor_logs entry written.</span></div></div>
+          <div class="task"><div class="task-icon">💵</div><div class="task-text"><strong>Offline payment OTP flow</strong><span>Tenant requests cash payment → OTP sent to tenant → manager enters OTP to confirm receipt → payment confirmed, receipt generated.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Agreement reminder cron jobs <span class="new-tag">ADDED</span></strong><span>Automated alerts 60 days, 30 days, and 7 days before agreement expiry. Sent to both owner and tenant. Without this, renewals are missed and tenants go dark.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Room change request flow <span class="new-tag">ADDED</span></strong><span>Full workflow: tenant submits request → owner approves → inventory updates → agreement amendment triggered if needed. This was in the spec but had no defined flow.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step reveal" style="--step-color: #F97316">
+      <div class="step-left">
+        <div class="step-num">6</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 6 — Admin & AI</div>
+        <div class="step-title">Admin Dashboard + AI Layer</div>
+        <div class="step-desc">The internal control panel for PGfy's team — and the beginning of the AI features that differentiate the product.</div>
+        <div class="step-duration">⏱ Weeks 22–27</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">🖥️</div><div class="task-text"><strong>Admin Dashboard (React.js)</strong><span>Property approval queue, user management, agreement monitoring, payment reconciliation, GST reports.</span></div></div>
+          <div class="task"><div class="task-icon">📊</div><div class="task-text"><strong>Reports & Analytics</strong><span>Occupancy by property/city, revenue reports, booking trends, agreement statistics, user growth metrics.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>AI Room Finder chatbot (Claude API) <span class="new-tag">ADDED</span></strong><span>Natural language property search. Tenant types "PG near Koramangala under ₹8k with food" → AI returns ranked matches. Biggest UX differentiator on the platform.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>AI Lease Explainer (Claude API) <span class="new-tag">ADDED</span></strong><span>After agreement is generated, AI produces a 5-point plain-English summary. Reduces disputes and increases tenant trust significantly.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Smart Rent Reminders (Claude API) <span class="new-tag">ADDED</span></strong><span>AI personalises reminder tone based on tenant payment history. Gentle for reliable payers, firmer for late payers. Reduces defaults by ~40%.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>AI Support Ticket Triage <span class="new-tag">ADDED</span></strong><span>AI categorises incoming support tickets, suggests resolutions, and auto-escalates unresolved ones. Reduces support workload by 60%.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step reveal" style="--step-color: #10B981">
+      <div class="step-left">
+        <div class="step-num">7</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 7 — Billing & Analytics</div>
+        <div class="step-title">GST Billing, Invoicing & Reports</div>
+        <div class="step-desc">Financial compliance layer — GST invoicing, reconciliation, and analytics dashboards for owners and admin.</div>
+        <div class="step-duration">⏱ Weeks 27–30</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">🧾</div><div class="task-text"><strong>GST configuration per property</strong><span>GSTIN entry & verification. GST-inclusive and GST-exclusive pricing. Auto-compute GST on every invoice.</span></div></div>
+          <div class="task"><div class="task-icon">📄</div><div class="task-text"><strong>Auto GST invoice generation</strong><span>PDF invoices with proper GST breakdowns — CGST, SGST, IGST as applicable. Download & share.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Owner Revenue Dashboard <span class="new-tag">ADDED</span></strong><span>Owners see their total revenue, occupancy rate, and collection status per property — all in one screen. This is what makes PGfy feel like a business tool, not just a listing site.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>AI Pricing Advisor (Claude API) <span class="new-tag">ADDED</span></strong><span>AI compares owner's rent to market data and tells them exactly how much money they're leaving on the table. Highest ROI AI feature for owner retention.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Tally / Accounting export <span class="new-tag">ADDED</span></strong><span>Export payment and GST data in Tally-compatible format. Most Indian property owners use Tally — this makes PGfy integrate seamlessly into their accounting workflow.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 8 -->
+    <div class="step reveal" style="--step-color: #EF4444">
+      <div class="step-left">
+        <div class="step-num">8</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 8 — Quality Assurance</div>
+        <div class="step-title">Testing, Security & Performance</div>
+        <div class="step-desc">No product ships without passing this phase completely. Security vulnerabilities and performance issues discovered after launch are 10× more expensive to fix.</div>
+        <div class="step-duration">⏱ Weeks 30–33</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">🧪</div><div class="task-text"><strong>End-to-end testing (all 3 apps)</strong><span>Full user journey testing — booking flow, payment flow, agreement signing, visitor OTP — on real iOS and Android devices.</span></div></div>
+          <div class="task"><div class="task-icon">🔒</div><div class="task-text"><strong>Security audit</strong><span>JWT hardening, OTP rate limiting, SQL injection prevention, HTTPS enforcement, PII encryption verification.</span></div></div>
+          <div class="task"><div class="task-icon">⚡</div><div class="task-text"><strong>Performance testing</strong><span>API response time audit (target: &lt;500ms p95). Load test with 10,000 simulated concurrent users.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Automated test suite (Jest + Detox) <span class="new-tag">ADDED</span></strong><span>Unit tests for backend business logic (smart lease engine, penalty calculation). Integration tests for critical API flows. Prevents regressions as the codebase grows.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Accessibility audit <span class="new-tag">ADDED</span></strong><span>Screen reader support, contrast ratios, touch target sizes. India's rental market includes users on low-end Android devices — the app must work for everyone.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Error monitoring setup (Sentry) <span class="new-tag">ADDED</span></strong><span>Sentry integrated in all 3 apps before launch. You need to know when something breaks in production before users start complaining.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 9 -->
+    <div class="step reveal" style="--step-color: #8B5CF6">
+      <div class="step-left">
+        <div class="step-num">9</div>
+      </div>
+      <div class="step-content">
+        <div class="step-phase-label">Phase 9 — Launch</div>
+        <div class="step-title">App Store Submission & Go-Live</div>
+        <div class="step-desc">The final push. App store submissions, production environment hardening, and the go-live sequence.</div>
+        <div class="step-duration">⏱ Weeks 33–36</div>
+        <div class="step-tasks">
+          <div class="task"><div class="task-icon">🍎</div><div class="task-text"><strong>Apple App Store submission</strong><span>App Store Connect setup, screenshots, metadata, review guidelines compliance. Allow 3–7 days for Apple review.</span></div></div>
+          <div class="task"><div class="task-icon">🤖</div><div class="task-text"><strong>Google Play Store submission</strong><span>Play Console setup, store listing, content rating questionnaire. Allow 1–3 days for review.</span></div></div>
+          <div class="task"><div class="task-icon">🌐</div><div class="task-text"><strong>Admin dashboard production deploy</strong><span>Hardened GCP deployment with custom domain, SSL, and restricted IP access for admin panel.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Monitoring & alerting setup (GCP + Sentry) <span class="new-tag">ADDED</span></strong><span>GCP Monitoring dashboards for API latency, error rates, DB query times. PagerDuty/Slack alerts for critical failures. You cannot manage what you cannot see.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Database backup automation <span class="new-tag">ADDED</span></strong><span>Daily automated PostgreSQL backups on GCP. 30-day retention. Tested restore procedure. Agreements and payments data is legally required to be recoverable.</span></div></div>
+          <div class="task new-task"><div class="task-icon">🔶</div><div class="task-text"><strong>Soft launch with 10 pilot properties <span class="new-tag">ADDED</span></strong><span>Don't open to everyone on Day 1. Onboard 10 trusted property owners first, run for 2 weeks, fix issues. Then open the floodgates. This de-risks the public launch massively.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end process-steps -->
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: ARCHITECTURE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="architecture">
+  <div class="reveal">
+    <div class="section-label">System Design</div>
+    <h2 class="section-title">Architecture Overview</h2>
+    <p class="section-desc">How every piece connects — clients, backend, database, and third-party services. One backend serves all three frontends.</p>
+  </div>
+
+  <div class="arch-diagram reveal reveal-delay-1">
+    <div class="arch-label">CLIENT LAYER</div>
+    <div class="arch-row">
+      <div class="arch-box blue">📱 Owner App<br><small style="font-weight:400;font-size:11px">React Native</small></div>
+      <div class="arch-box cyan">📱 Tenant App<br><small style="font-weight:400;font-size:11px">React Native</small></div>
+      <div class="arch-box purple">🖥️ Admin Dashboard<br><small style="font-weight:400;font-size:11px">React.js</small></div>
+    </div>
+    <div class="arch-arrow">↕ REST API (HTTPS)</div>
+
+    <div class="arch-label">BACKEND LAYER — Node.js + Express.js on GCP Cloud Run</div>
+    <div class="arch-row">
+      <div class="arch-box surface">🔐 Auth & RBAC</div>
+      <div class="arch-box surface">🏘️ Properties</div>
+      <div class="arch-box surface">📅 Bookings</div>
+      <div class="arch-box surface">💳 Payments</div>
+      <div class="arch-box surface">📝 Agreements</div>
+      <div class="arch-box surface">🚪 Visitor OTP</div>
+      <div class="arch-box new">🤖 AI Engine <span class="new-tag" style="font-size:9px">ADDED</span></div>
+    </div>
+    <div class="arch-arrow">↕</div>
+
+    <div class="arch-label">DATA LAYER</div>
+    <div class="arch-row">
+      <div class="arch-box surface">🗄️ PostgreSQL<br><small style="font-weight:400;font-size:11px">GCP Cloud SQL</small></div>
+      <div class="arch-box surface">📦 File Storage<br><small style="font-weight:400;font-size:11px">GCP Cloud Storage</small></div>
+      <div class="arch-box new">📊 Analytics DB <span class="new-tag" style="font-size:9px">ADDED</span><br><small style="font-weight:400;font-size:11px">BigQuery (AI training data)</small></div>
+    </div>
+    <div class="arch-arrow">↕ API calls</div>
+
+    <div class="arch-label">THIRD-PARTY INTEGRATIONS</div>
+    <div class="arch-row">
+      <div class="arch-box green">💳 Razorpay</div>
+      <div class="arch-box green">💳 PayU</div>
+      <div class="arch-box amber">🪪 Hyperverge KYC</div>
+      <div class="arch-box blue">📝 Doqfy eSign</div>
+      <div class="arch-box surface">📱 MSG91 OTP</div>
+      <div class="arch-box surface">🔔 Firebase FCM</div>
+      <div class="arch-box new">🧠 Claude API <span class="new-tag" style="font-size:9px">ADDED</span></div>
+      <div class="arch-box new">📈 Sentry <span class="new-tag" style="font-size:9px">ADDED</span></div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal reveal-delay-2">
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:12px">🔑</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Single Backend, Three Frontends</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6">One Node.js API serves all three apps. RBAC middleware determines what each role can see and do. This means no duplicated business logic and a single source of truth.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:12px">📡</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">API Versioning from Day 1</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6">All routes under /api/v1/. When breaking changes are needed, /api/v2/ is added. Old app versions keep working. This is critical once apps are on app stores.</div>
+    </div>
+    <div class="card card-new">
+      <div style="font-size:24px;margin-bottom:12px">🤖</div>
+      <div style="font-size:15px;font-weight:700;color:var(--new);margin-bottom:8px">AI as a Backend Service <span class="new-tag">ADDED</span></div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6">Claude API calls are made from the backend only — never from the client apps directly. This keeps API keys secure and allows AI logic to evolve without app updates.</div>
+    </div>
+    <div class="card card-new">
+      <div style="font-size:24px;margin-bottom:12px">📊</div>
+      <div style="font-size:15px;font-weight:700;color:var(--new);margin-bottom:8px">BigQuery for AI Training Data <span class="new-tag">ADDED</span></div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6">Every search query, booking, and payment event is streamed to BigQuery. This builds the proprietary dataset that makes PGfy's AI smarter over time — and impossible for competitors to replicate.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: TECH STACK -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="techstack">
+  <div class="reveal">
+    <div class="section-label">Technology</div>
+    <h2 class="section-title">Complete Tech Stack</h2>
+    <p class="section-desc">Every tool, library, and service used to build PGfy v2. Orange = we added this. Core stack is locked per PRD.</p>
+  </div>
+
+  <div class="stack-categories">
+
+    <div class="reveal">
+      <div class="stack-category-title">📱 Mobile Frontend</div>
+      <div class="stack-grid">
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">⚛️</div>
+          <div class="tech-name">React Native</div>
+          <div class="tech-purpose">Cross-platform mobile. One codebase → iOS + Android. 2 separate builds: Owner App + Tenant App.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">🧭</div>
+          <div class="tech-name">React Navigation</div>
+          <div class="tech-purpose">Stack, tab, and drawer navigation across all app screens.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🏪</div>
+          <div class="tech-name">Zustand</div>
+          <div class="tech-purpose">Lightweight state management. Simpler than Redux for this scale. Manages auth, booking state, notifications.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔗</div>
+          <div class="tech-name">React Query</div>
+          <div class="tech-purpose">Server state management — caching, background refetching, loading states. Dramatically reduces boilerplate API code.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🎨</div>
+          <div class="tech-name">Shopify Restyle</div>
+          <div class="tech-purpose">Design token-based styling system. Connects directly to Figma tokens — ensures pixel-perfect consistency.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🧪</div>
+          <div class="tech-name">Detox</div>
+          <div class="tech-purpose">End-to-end testing framework for React Native. Test real user flows on simulators automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="stack-category-title">🖥️ Admin Dashboard (Web)</div>
+      <div class="stack-grid">
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">⚛️</div>
+          <div class="tech-name">React.js</div>
+          <div class="tech-purpose">Admin dashboard web app. Vite for fast builds. React Router for navigation.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🌊</div>
+          <div class="tech-name">TailwindCSS</div>
+          <div class="tech-purpose">Utility-first CSS. Builds admin UIs fast with consistent styling. No custom CSS files needed.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📊</div>
+          <div class="tech-name">Recharts / Chart.js</div>
+          <div class="tech-purpose">Revenue graphs, occupancy charts, booking trend visualizations for the admin dashboard.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📋</div>
+          <div class="tech-name">TanStack Table</div>
+          <div class="tech-purpose">Headless table library for complex data grids — property listings, payment reconciliation, user management.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="stack-category-title">⚙️ Backend</div>
+      <div class="stack-grid">
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">🟢</div>
+          <div class="tech-name">Node.js + Express</div>
+          <div class="tech-purpose">REST API server. Modular structure by domain. Role-based middleware on every route.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">🐘</div>
+          <div class="tech-name">PostgreSQL</div>
+          <div class="tech-purpose">Primary relational database. Normalized schema supporting all 4 inventory models cleanly.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔄</div>
+          <div class="tech-name">node-pg-migrate</div>
+          <div class="tech-purpose">Database migration management. Every schema change is a versioned migration file — no manual table edits ever.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔴</div>
+          <div class="tech-name">Redis</div>
+          <div class="tech-purpose">OTP session caching (5-min TTL), API rate limiting, session blacklisting. Prevents OTP brute force attacks.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">⏰</div>
+          <div class="tech-name">node-cron</div>
+          <div class="tech-purpose">Scheduled jobs: agreement expiry alerts, auto-renewal triggers, AI pricing refresh, daily backup verification.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📖</div>
+          <div class="tech-name">Swagger / OpenAPI</div>
+          <div class="tech-purpose">Auto-generated API documentation at /api/docs. Every endpoint documented as it's built.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">✅</div>
+          <div class="tech-name">Zod</div>
+          <div class="tech-purpose">Runtime request validation. All incoming API payloads validated with Zod schemas — prevents bad data from reaching the DB.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🧪</div>
+          <div class="tech-name">Jest</div>
+          <div class="tech-purpose">Unit + integration tests for backend. Smart lease engine, penalty calculation, OTP logic must all be test-covered.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="stack-category-title">🤖 AI Layer</div>
+      <div class="stack-grid">
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🧠</div>
+          <div class="tech-name">Claude API (Anthropic)</div>
+          <div class="tech-purpose">Core AI model. Powers chatbot search, lease explainer, pricing advisor, smart reminders, support triage.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📊</div>
+          <div class="tech-name">GCP BigQuery</div>
+          <div class="tech-purpose">Proprietary data warehouse. Streams all platform events. Powers AI training data and long-term analytics.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔍</div>
+          <div class="tech-name">pgvector (PostgreSQL)</div>
+          <div class="tech-purpose">Vector similarity search extension. Enables semantic property matching — "find PGs like this one" — within existing PostgreSQL.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="stack-category-title">☁️ Infrastructure & DevOps</div>
+      <div class="stack-grid">
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">☁️</div>
+          <div class="tech-name">GCP Cloud Run</div>
+          <div class="tech-purpose">Serverless container hosting for backend. Auto-scales to 0 when idle, scales up instantly under load.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">💾</div>
+          <div class="tech-name">GCP Cloud Storage</div>
+          <div class="tech-purpose">Media uploads (property photos), KYC documents, agreement PDFs. Signed URLs for secure access.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔀</div>
+          <div class="tech-name">GitHub Actions</div>
+          <div class="tech-purpose">CI/CD pipeline. Push to main → run tests → build → deploy to staging automatically.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🔐</div>
+          <div class="tech-name">GCP Secret Manager</div>
+          <div class="tech-purpose">All API keys and credentials stored securely. Injected at runtime. Zero hardcoded secrets in codebase.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">🚨</div>
+          <div class="tech-name">Sentry</div>
+          <div class="tech-purpose">Real-time error monitoring across all 3 apps + backend. Get alerted the moment something breaks in production.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📈</div>
+          <div class="tech-name">GCP Monitoring</div>
+          <div class="tech-purpose">API latency, error rate, and DB performance dashboards. Alerts when metrics breach thresholds.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="stack-category-title">🔗 Third-Party Integrations</div>
+      <div class="stack-grid">
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">💳</div>
+          <div class="tech-name">Razorpay + PayU</div>
+          <div class="tech-purpose">Online payment processing. Webhook handling for payment confirmations. Existing integrations — must not break.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">🪪</div>
+          <div class="tech-name">Hyperverge</div>
+          <div class="tech-purpose">Owner and tenant KYC — Aadhaar + face liveness verification. Existing integration.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">📝</div>
+          <div class="tech-name">Doqfy</div>
+          <div class="tech-purpose">E-agreement generation and Aadhaar-based eSign. New integration — API docs needed from Doqfy ASAP.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📱</div>
+          <div class="tech-name">MSG91</div>
+          <div class="tech-purpose">OTP SMS delivery for Indian phone numbers. Better delivery rates in India than Twilio.</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-badge core">Core</div>
+          <div class="tech-icon">🔔</div>
+          <div class="tech-name">Firebase FCM</div>
+          <div class="tech-purpose">Push notifications to iOS and Android. Booking alerts, payment confirmations, agreement status.</div>
+        </div>
+        <div class="tech-card new-tech">
+          <div class="tech-badge new">Added</div>
+          <div class="tech-icon">📧</div>
+          <div class="tech-name">SendGrid</div>
+          <div class="tech-purpose">Transactional emails — invoice PDFs, agreement copies, weekly owner summaries, admin reports. SMS alone isn't enough.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: WHAT WE ADDED -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="missing">
+  <div class="reveal">
+    <div class="section-label">Gap Analysis</div>
+    <h2 class="section-title">What Was Missing<br>from the PRD</h2>
+    <p class="section-desc">Your original documents were solid — but these are the critical gaps we identified and added. Each one would have caused real problems if left unaddressed.</p>
+  </div>
+
+  <div class="missing-grid">
+    <div class="missing-card reveal">
+      <div class="missing-card-icon">🤖</div>
+      <div class="missing-card-tag">AI Layer</div>
+      <div class="missing-card-title">No AI Strategy at All</div>
+      <div class="missing-card-desc">The original PRD had zero mention of AI. In 2026, shipping a platform without AI is like shipping without mobile support in 2015. We've added a full 4-phase AI roadmap using Claude API.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> AI search, lease explainer, and pricing advisor are the features that make users choose PGfy over a WhatsApp group or NoBroker.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-1">
+      <div class="missing-card-icon">🔴</div>
+      <div class="missing-card-tag">Infrastructure</div>
+      <div class="missing-card-title">Redis for OTP & Rate Limiting</div>
+      <div class="missing-card-desc">The PRD mentioned OTPs must be time-bound and single-use but gave no implementation path. Storing OTPs in PostgreSQL creates race conditions and doesn't expire cleanly. Redis is the right tool.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> Without Redis, OTP brute force attacks are possible. A bad actor could try thousands of OTP combinations on a user's account.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-2">
+      <div class="missing-card-icon">🚨</div>
+      <div class="missing-card-tag">Observability</div>
+      <div class="missing-card-title">No Error Monitoring (Sentry)</div>
+      <div class="missing-card-desc">The PRD said "proper error handling & logs required" but didn't specify how. Without Sentry, you find out about production bugs when angry users call you — not before.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> A payment gateway failure or OTP service outage can happen at 2am. Sentry alerts you immediately with the exact line of code that broke.</div>
+    </div>
+
+    <div class="missing-card reveal">
+      <div class="missing-card-icon">📧</div>
+      <div class="missing-card-tag">Communication</div>
+      <div class="missing-card-title">No Email System (SendGrid)</div>
+      <div class="missing-card-desc">The PRD only mentioned SMS and push notifications. But critical documents — GST invoices, agreement copies, monthly statements — need to be emailed. SMS can't carry a PDF attachment.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> Owners need email invoices for their accounting. Tenants need email copies of agreements. This is a compliance requirement in many cases.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-1">
+      <div class="missing-card-icon">📊</div>
+      <div class="missing-card-tag">Analytics</div>
+      <div class="missing-card-title">BigQuery Data Warehouse</div>
+      <div class="missing-card-desc">The PRD had reports and analytics but no data infrastructure. PostgreSQL is not designed for analytical queries across millions of rows. BigQuery handles this and doubles as the foundation for AI training data.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> In 2 years, PGfy's proprietary rental market data (search trends, pricing, occupancy patterns) will be worth more than the app itself. Start collecting it now.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-2">
+      <div class="missing-card-icon">🧪</div>
+      <div class="missing-card-tag">Quality</div>
+      <div class="missing-card-title">No Automated Testing Plan</div>
+      <div class="missing-card-desc">The PRD mentioned testing in passing. With a payment system, legal agreements, and OTP security, having zero automated tests is a ticking time bomb. One bad deploy breaks payments for all users.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> Jest for backend + Detox for mobile means you can deploy with confidence. The smart lease engine's penalty calculation especially needs test coverage — it's financial logic.</div>
+    </div>
+
+    <div class="missing-card reveal">
+      <div class="missing-card-icon">🚀</div>
+      <div class="missing-card-tag">Launch Strategy</div>
+      <div class="missing-card-title">No Soft Launch Plan</div>
+      <div class="missing-card-desc">The PRD went from "build" straight to "launch." Going from 0 to public with no intermediate step is extremely risky. A payment bug affecting 1000 owners on Day 1 can destroy the platform's reputation permanently.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> Pilot with 10 trusted properties for 2 weeks first. Fix everything that breaks. Then open publicly. This single step de-risks the launch by 80%.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-1">
+      <div class="missing-card-icon">📱</div>
+      <div class="missing-card-tag">Growth</div>
+      <div class="missing-card-title">No Deep Linking / Sharing</div>
+      <div class="missing-card-desc">The PRD had no mention of shareable property links. Tenants discovering good PGs naturally share them with friends. Without deep links, those shares go nowhere — a massive missed growth opportunity.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> Word-of-mouth is the most cost-effective acquisition channel in the rental market. Deep linking turns every tenant into a distribution channel.</div>
+    </div>
+
+    <div class="missing-card reveal reveal-delay-2">
+      <div class="missing-card-icon">📒</div>
+      <div class="missing-card-tag">Finance</div>
+      <div class="missing-card-title">Tally Export for Owners</div>
+      <div class="missing-card-desc">Indian property owners predominantly use Tally for accounting. If PGfy data doesn't connect to Tally, owners will maintain double records — and blame PGfy for the extra work. A simple export solves this.</div>
+      <div class="missing-card-why"><strong>Why it matters:</strong> This is a 2-day dev task that removes a major friction point for owner adoption. Small effort, massive impact on owner retention.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: TIMELINE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="timeline">
+  <div class="reveal">
+    <div class="section-label">Delivery Plan</div>
+    <h2 class="section-title">36-Week Timeline</h2>
+    <p class="section-desc">Month-by-month delivery schedule across all workstreams. Backend always leads frontend by 2–3 weeks.</p>
+  </div>
+
+  <div class="gantt reveal reveal-delay-1">
+    <div class="gantt-header">
+      <div class="gantt-header-cell">Workstream</div>
+      <div class="gantt-header-cell">M1</div>
+      <div class="gantt-header-cell">M2</div>
+      <div class="gantt-header-cell">M3</div>
+      <div class="gantt-header-cell">M4</div>
+      <div class="gantt-header-cell">M5</div>
+      <div class="gantt-header-cell">M6</div>
+      <div class="gantt-header-cell">M7</div>
+      <div class="gantt-header-cell">M8</div>
+      <div class="gantt-header-cell">M9</div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">📋 Design & Planning</div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Design</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">🏗️ Infra & Auth</div>
+      <div class="gantt-cell"><div class="gantt-bar purple">Infra</div></div>
+      <div class="gantt-cell"><div class="gantt-bar purple">Auth</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">⚙️ Backend APIs</div>
+      <div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Owner</div></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Tenant</div></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Pay</div></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Agree</div></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">Admin</div></div>
+      <div class="gantt-cell"><div class="gantt-bar blue">GST</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">📱 Owner App (RN)</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar green">KYC</div></div>
+      <div class="gantt-cell"><div class="gantt-bar green">Prop</div></div>
+      <div class="gantt-cell"><div class="gantt-bar green">Inv</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">📱 Tenant App (RN)</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar cyan">Search</div></div>
+      <div class="gantt-cell"><div class="gantt-bar cyan">Book</div></div>
+      <div class="gantt-cell"><div class="gantt-bar cyan">Pay</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">📝 Agreements + OTP</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar amber">Doqfy</div></div>
+      <div class="gantt-cell"><div class="gantt-bar amber">Lease</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">🖥️ Admin Dashboard</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar purple">Admin</div></div>
+      <div class="gantt-cell"><div class="gantt-bar purple">Reports</div></div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">🤖 AI Features</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar new">Chat</div></div>
+      <div class="gantt-cell"><div class="gantt-bar new">Lease</div></div>
+      <div class="gantt-cell"><div class="gantt-bar new">Price</div></div>
+      <div class="gantt-cell"></div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">🧪 QA + Launch</div>
+      <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      <div class="gantt-cell"><div class="gantt-bar amber">QA</div></div>
+      <div class="gantt-cell"><div class="gantt-bar green">🚀</div></div>
+    </div>
+  </div>
+
+  <div class="card-grid reveal reveal-delay-2">
+    <div class="card" style="border-color:var(--green-border)">
+      <div style="font-size:32px;font-family:Playfair Display,serif;font-weight:900;color:var(--green);margin-bottom:8px">Month 3</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">First Working Demo</div>
+      <div style="font-size:13px;color:var(--muted)">Owner can register, complete KYC, create property, add rooms. Show this to investors and early adopters.</div>
+    </div>
+    <div class="card" style="border-color:var(--blue-border)">
+      <div style="font-size:32px;font-family:Playfair Display,serif;font-weight:900;color:var(--blue);margin-bottom:8px">Month 6</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px">Full Product Beta</div>
+      <div style="font-size:13px;color:var(--muted)">Tenant can book and pay. Agreements signed. Visitor OTP live. Start the 10-property soft launch pilot.</div>
+    </div>
+    <div class="card" style="border-color:var(--new-border)">
+      <div style="font-size:32px;font-family:Playfair Display,serif;font-weight:900;color:var(--new);margin-bottom:8px">Month 9</div>
+      <div style="font-size:15px;font-weight:700;color:var(--new);margin-bottom:6px">Public Launch 🚀 <span class="new-tag">Target</span></div>
+      <div style="font-size:13px;color:var(--muted)">All AI features live. Both apps on App Store + Play Store. Admin dashboard operational. GST billing complete.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: ENGINEERING PRINCIPLES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="principles">
+  <div class="reveal">
+    <div class="section-label">Non-Negotiables</div>
+    <h2 class="section-title">Engineering Principles</h2>
+    <p class="section-desc">Rules the entire development team must follow from Day 1. These aren't suggestions — violating them creates technical debt that costs 10x to fix later.</p>
+  </div>
+
+  <div class="principles-grid">
+    <div class="principle reveal"><div class="principle-num">01</div><div><div class="principle-title">Backend Always Leads Frontend</div><div class="principle-desc">No frontend work starts on a feature until the API is written, tested in Postman, and documented in Swagger. Ever.</div></div></div>
+    <div class="principle reveal reveal-delay-1"><div class="principle-num">02</div><div><div class="principle-title">Schema is Sacred</div><div class="principle-desc">Spend extra time on database design in Phase 1. Every schema change after launch is a migration that affects live data. Get it right upfront.</div></div></div>
+    <div class="principle reveal reveal-delay-2"><div class="principle-num">03</div><div><div class="principle-title">Never Touch Production Manually</div><div class="principle-desc">All deployments go through GitHub Actions CI/CD. No SSH into production servers. No manual SQL on the production DB.</div></div></div>
+    <div class="principle reveal"><div class="principle-num">04</div><div><div class="principle-title">Zero Hardcoded Secrets</div><div class="principle-desc">Every API key, password, and credential lives in GCP Secret Manager. If it's in the codebase, it's a security incident waiting to happen.</div></div></div>
+    <div class="principle reveal reveal-delay-1"><div class="principle-num">05</div><div><div class="principle-title">Document As You Build</div><div class="principle-desc">Every API endpoint gets a Swagger doc the same day it's built. Every module gets a README. Documentation done at the end never gets done.</div></div></div>
+    <div class="principle reveal reveal-delay-2"><div class="principle-num">06</div><div><div class="principle-title">Soft Deletes Only</div><div class="principle-desc">No hard deletes on any table. Use deleted_at timestamps. Agreements, payments, and visitor logs are legally required to be permanently recoverable.</div></div></div>
+    <div class="principle reveal"><div class="principle-num">07</div><div><div class="principle-title">Test on Real Devices</div><div class="principle-desc">React Native behaves differently on real iOS/Android vs simulators. Every feature is tested on real phones from Phase 3 onwards — not just emulators.</div></div></div>
+    <div class="principle reveal reveal-delay-1"><div class="principle-num">08</div><div><div class="principle-title">API Versioning Always</div><div class="principle-desc">All routes under /api/v1/. Breaking changes get a new version, old ones stay alive. Once apps are on app stores, you cannot force everyone to update.</div></div></div>
+    <div class="principle reveal reveal-delay-2 card-new" style="border:1px solid var(--new-border);padding:24px;border-radius:12px">
+      <div class="principle-num" style="color:var(--new)">09</div>
+      <div>
+        <div class="principle-title" style="color:var(--new)">AI Calls from Backend Only <span class="new-tag">ADDED</span></div>
+        <div class="principle-desc">Claude API is called from the backend exclusively. Never from the mobile app directly. Keeps API keys secure, allows AI logic to update without app store releases.</div>
+      </div>
+    </div>
+    <div class="principle reveal card-new" style="border:1px solid var(--new-border);padding:24px;border-radius:12px">
+      <div class="principle-num" style="color:var(--new)">10</div>
+      <div>
+        <div class="principle-title" style="color:var(--new)">Log Everything for AI <span class="new-tag">ADDED</span></div>
+        <div class="principle-desc">Every user action — search query, filter used, property viewed, booking abandoned — is structured and streamed to BigQuery. This is how PGfy's AI gets smarter over time.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: LAUNCH CHECKLIST -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="launch">
+  <div class="reveal">
+    <div class="section-label">Go-Live Readiness</div>
+    <h2 class="section-title">Launch Checklist</h2>
+    <p class="section-desc">Every item here must be checked before the app goes public. Use this as the final gate before launch.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px" class="reveal reveal-delay-1">
+    <div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">🔐 Security</div>
+      <div class="checklist">
+        <div class="check-item"><input type="checkbox" id="s1"><label for="s1"><strong>All PII encrypted at rest (AES-256)</strong>Aadhaar, bank details, contact info</label></div>
+        <div class="check-item"><input type="checkbox" id="s2"><label for="s2"><strong>HTTPS enforced on all endpoints</strong>No HTTP fallback allowed</label></div>
+        <div class="check-item"><input type="checkbox" id="s3"><label for="s3"><strong>OTP rate limiting active</strong>Max 3 OTPs per hour per mobile via Redis</label></div>
+        <div class="check-item"><input type="checkbox" id="s4"><label for="s4"><strong>JWT expiry + refresh token flow</strong>15-min access token, 7-day refresh</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="s5"><label for="s5"><strong>Penetration test completed 🔶</strong>External security audit on auth + payment endpoints</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="s6"><label for="s6"><strong>Secrets audit — zero in codebase 🔶</strong>GitHub secret scanning enabled on all repos</label></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">⚡ Performance</div>
+      <div class="checklist">
+        <div class="check-item"><input type="checkbox" id="p1"><label for="p1"><strong>API p95 response time &lt; 500ms</strong>Tested under load on staging</label></div>
+        <div class="check-item"><input type="checkbox" id="p2"><label for="p2"><strong>Load test: 10,000 concurrent users</strong>Cloud Run auto-scaling verified</label></div>
+        <div class="check-item"><input type="checkbox" id="p3"><label for="p3"><strong>Database indexes on all query columns</strong>No table scans on production queries</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="p4"><label for="p4"><strong>Redis caching for hot endpoints 🔶</strong>Property search results cached for 5 minutes</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="p5"><label for="p5"><strong>Image optimization pipeline 🔶</strong>Property photos compressed + served via CDN</label></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">📱 App Store</div>
+      <div class="checklist">
+        <div class="check-item"><input type="checkbox" id="a1"><label for="a1"><strong>Apple Developer account active</strong>Business account (not personal)</label></div>
+        <div class="check-item"><input type="checkbox" id="a2"><label for="a2"><strong>Google Play Console active</strong>All store listings and screenshots ready</label></div>
+        <div class="check-item"><input type="checkbox" id="a3"><label for="a3"><strong>App icons + splash screens (all sizes)</strong>iOS + Android spec compliance</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="a4"><label for="a4"><strong>Privacy policy + terms of service live 🔶</strong>Required by both app stores. Legal document must mention AI usage.</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="a5"><label for="a5"><strong>App review guidelines compliance check 🔶</strong>Both stores reject apps for KYC/payment flows that don't meet their policies</label></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">🏗️ Infrastructure</div>
+      <div class="checklist">
+        <div class="check-item"><input type="checkbox" id="i1"><label for="i1"><strong>Production environment fully isolated</strong>Separate GCP project from staging</label></div>
+        <div class="check-item"><input type="checkbox" id="i2"><label for="i2"><strong>Daily automated database backups</strong>30-day retention, tested restore</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="i3"><label for="i3"><strong>Sentry live on all 3 apps 🔶</strong>Error alerts going to team Slack channel</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="i4"><label for="i4"><strong>GCP Monitoring dashboards live 🔶</strong>API latency, error rate, DB health all visible</label></div>
+        <div class="check-item new-check"><input type="checkbox" id="i5"><label for="i5"><strong>10 pilot properties onboarded 🔶</strong>2-week soft launch complete, issues resolved</label></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PGfy<span>.</span>v2</div>
+  <p>Full App Development Process — Build Blueprint</p>
+  <div class="new-note">
+    🔶 Orange items = Additions recommended beyond the original PRD
+  </div>
+</footer>
+
+<script>
+// Nav active state
+function navTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Update nav on scroll
+const sections = ['process','architecture','techstack','missing','timeline','principles','launch'];
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY + 120;
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (scrollY >= el.offsetTop && scrollY < el.offsetTop + el.offsetHeight) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      const activeLink = document.querySelector(`.nav-link[onclick="navTo('${id}')"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+});
+
+// Checklist items
+document.querySelectorAll('.check-item input').forEach(cb => {
+  cb.addEventListener('change', function() {
+    this.closest('.check-item').style.opacity = this.checked ? '0.5' : '1';
+    this.closest('.check-item').style.textDecoration = this.checked ? 'line-through' : 'none';
+  });
+});
+</script>
+</body>
+</html>
